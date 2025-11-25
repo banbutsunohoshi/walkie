@@ -24,11 +24,11 @@
 
 ### 2.1. Сценарий работы приложения глазами пользователя
 
-![users.png](users_view.png)
+![users.png](images/users_view.png)
 
 ### 2.2 Архитектурная схема слоев
 
-![arch_layers.png](arch_layers.png)
+![arch_layers.png](images/arch_layers.png)
 
 ## 3. Описание проекта
 
