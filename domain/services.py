@@ -77,3 +77,15 @@ class WalkStorage:
         if not history:
             return 1
         return max(entry.id for entry in history) + 1
+
+
+class MLRecommendationService:
+    """Место для дальнейшей реализации МО"""
+
+    def rank(
+        self,
+        quests: Iterable[Quest],
+        history: Iterable[HistoryEntry],
+        params: UserParams,
+    ) -> list[Quest]:
+        raise NotImplementedError("ML recommendation is not implemented yet :(")
