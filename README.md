@@ -39,7 +39,29 @@ docker run --rm -e WALKIE_GREETING="Привет из Walkie!" -e WALKIE_DATA_DI
 - `WALKIE_GREETING` — приветственное сообщение (по умолчанию: `Добро пожаловать в Walkie!`)
 - `WALKIE_DATA_DIR` — путь к данным приложения (по умолчанию: `/data`)
 
+## Тестирование
+
+Установка зависимости для тестов:
+
+```bash
+pip install pytest pytest-cov
+```
+
+Запуск всех тестов:
+
+```bash
+pytest
+```
+
+Покрытие запускается автоматически через `pytest-cov` и выводится в консоль. При необходимости мы можем явно
+указать параметры:
+
+```bash
+pytest --cov=cli --cov=domain --cov=use_cases --cov-report=term-missing
+```
+
 ---
+
 
 ## 2. Схемы взаимодействия системы
 
