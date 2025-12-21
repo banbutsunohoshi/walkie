@@ -203,6 +203,28 @@ pytest --cov=cli --cov=domain --cov=use_cases --cov-report=term-missing
 
 ### 4.2. Формат и хранение данных
 
+#### 4.2.0. Локальная БД и каталоги данных
+
+В качестве "БД" используется локальное файловое хранилище в каталоге,
+заданном переменной окружения `WALKIE_DATA_DIR` (по умолчанию: `/data`).
+Структура данных следующая:
+
+```
+${WALKIE_DATA_DIR}/
+  quests.json          #база заданий
+  history.json         #история прогулок
+  photos/
+    <walk_id>/
+      <task_id>/
+        <timestamp>_<original_name>.jpg
+```
+
+- `quests.json` и `history.json` — основные таблицы (файлы JSON)
+- `photos/` — каталог для локального хранения файлов изображений
+- Все ссылки на фотографии в `history.json` — это относительные пути
+  от корня `WALKIE_DATA_DIR`, чтобы данные можно было переносить между машинами
+  (например, `photos/12/task3/2025-11-25_1830_sunset.jpg`).
+
 #### 4.2.1. Квесты (`quests.json`)
 
 Каждый квест может описываться объектом следующим образом:
@@ -236,11 +258,12 @@ pytest --cov=cli --cov=domain --cov=use_cases --cov-report=term-missing
   },
   "tasks": [
     {
+      "id": "task1",
       "title": "Прогуляться вдоль набережной",
       "completed": true,
       "photos": [
         {
-          "file_path": "photos/12/step1_sunset.jpg",
+          "file_path": "photos/12/task1/2025-11-25_1830_sunset.jpg",
           "caption": "Фото заката у воды"
         }
       ]
@@ -358,8 +381,9 @@ pytest --cov=cli --cov=domain --cov=use_cases --cov-report=term-missing
 6. Пользователь по ходу прогулки:  
    - отмечает выполнение заданий
    - если пользователь сделал фото, программа сохраняет путь и подпись
-   - изображения хранятся в папке `photos/<id_прогулки>/`
+   - изображения хранятся в `${WALKIE_DATA_DIR}/photos/<id_прогулки>/<id_задания>/`
    - ссылки на них добавляются в JSON в массив `photos` внутри каждого задания
+   - в истории сохраняется относительный путь от корня `WALKIE_DATA_DIR`
 
 7. При завершении или прерывании прогулки:
    - `FinishWalk` получает данные
@@ -379,5 +403,3 @@ pytest --cov=cli --cov=domain --cov=use_cases --cov-report=term-missing
    - на основе старых параметров создаётся `UserParams` 
    - запускается `GenerateWalk` с этими параметрами
    - генерируется новый маршрут
-
-
