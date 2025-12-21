@@ -18,6 +18,27 @@
 [@banbutsuno_hoshi](https://t.me/banbutsuno_hoshi) — TeamLead\
 [@Eva_monsher](https://t.me/Eva_monsher) — Dev1
 
+## Docker
+
+### Сборка образа
+
+```bash
+docker build -t walkie .
+```
+
+### Запуск контейнера
+
+```bash
+docker run --rm -e WALKIE_GREETING="Привет из Walkie!" -e WALKIE_DATA_DIR=/data walkie
+```
+
+### Переменные окружения
+
+Конфигурация задаётся через переменные окружения, чтобы не хранить секреты в образе:
+
+- `WALKIE_GREETING` — приветственное сообщение (по умолчанию: `Привет из Walkie!`)
+- `WALKIE_DATA_DIR` — путь к данным приложения (по умолчанию: `/data`)
+
 ---
 
 ## 2. Схемы взаимодействия системы
