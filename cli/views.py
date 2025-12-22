@@ -1,5 +1,8 @@
+from pathlib import Path
 from typing import Iterable
+
 from domain.models import HistoryEntry, Walk, WalkTask
+from domain.ports import PhotoStorage
 
 
 def display_message(message: str) -> None:
@@ -15,25 +18,54 @@ def display_walk(walk: Walk) -> None:
     display_message("Не забудьте сделать фото после каждого задания!\n")
 
 
-def _collect_photo_metadata() -> list[dict[str, str]]:
+def _collect_photo_metadata(
+    entry_id: int,
+    task_id: int,
+    local_storage: PhotoStorage,
+) -> list[dict[str, str]]:
     response = input("Сделали фото? (y/n): ").strip().lower()
     if response != "y":
         return []
-    file_path = input("Введите путь к фото: ").strip()
-    caption = input("Короткая подпись к фото (Enter — без подписи): ").strip()
-    photo = {"file_path": file_path}
-    if caption:
-        photo["caption"] = caption
-    return [photo]
+    while True:
+        file_path_raw = input("Введите путь к фото (Enter — отмена): ").strip()
+        if not file_path_raw:
+            return []
+        file_path = Path(file_path_raw)
+        if not file_path.exists():
+            display_message("Файл не найден. Укажите корректный путь.")
+            continue
+        try:
+            data = file_path.read_bytes()
+        except OSError:
+            display_message("Не удалось прочитать файл. Попробуйте снова.")
+            continue
+        metadata = local_storage.store_photo(
+            entry_id=entry_id,
+            task_id=task_id,
+            filename=file_path.name,
+            data=data,
+        )
+        caption = input("Короткая подпись к фото (Enter — без подписи): ").strip()
+        if caption:
+            metadata["caption"] = caption
+        return [metadata]
 
 
-def display_walk_completion(walk: Walk) -> list[WalkTask]:
+def display_walk_completion(
+    walk: Walk,
+    entry_id: int,
+    local_storage: PhotoStorage,
+) -> list[WalkTask]:
     display_message("Отметьте выполнение заданий:")
     updated_tasks: list[WalkTask] = []
     for idx, task in enumerate(walk.tasks, start=1):
         response = input(f"Задание {idx} выполнено? (y/n): ").strip().lower()
         completed = response == "y"
-        photos = _collect_photo_metadata()
+        photos = _collect_photo_metadata(
+            entry_id=entry_id,
+            task_id=idx,
+            local_storage=local_storage,
+        )
         updated_tasks.append(
             WalkTask(
                 quest=task.quest,
