@@ -29,14 +29,4 @@ class GenerateWalkUseCase:
         return Walk(tasks=tasks)
         
 
-def generate_walk(
-    params: UserParams,
-    quest_repo: QuestRepository,
-    recommendation_service: MLRecommendationService,
-    walk_storage: WalkStorage,
-) -> Walk:
-    return GenerateWalkUseCase(
-        quest_repo=quest_repo,
-        recommendation_service=recommendation_service,
-        walk_storage=walk_storage,
-    ).execute(params)
+__all__ = ["GenerateWalkUseCase"]
