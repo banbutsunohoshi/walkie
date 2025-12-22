@@ -1,4 +1,4 @@
-from domain.models import Walk, WalkTask
+from domain.models import WalkTask
 from domain.services import QuestRepository, RecommendationService, ScoringService, WalkStorage
 from infrastructure.json_storage import JsonStorage
 from use_cases.finish_walk import finish_walk
@@ -27,14 +27,17 @@ def test_generate_walk_uses_recommendations_and_time_limit(
 def test_finish_walk_persists_entry(sample_user_params, sample_quests, tmp_path):
     storage = JsonStorage(str(tmp_path / "history.json"))
     walk_storage = WalkStorage(storage=storage)
-    walk = Walk(tasks=[WalkTask(quest=sample_quests[0]), WalkTask(quest=sample_quests[1])])
+    tasks = [
+        WalkTask(quest=sample_quests[0], completed=True),
+        WalkTask(quest=sample_quests[1], completed=False),
+    ]
 
     entry = finish_walk(
-        walk=walk,
         params=sample_user_params,
-        completion=[True, False],
+        tasks=tasks,
         scoring_service=ScoringService(),
         walk_storage=walk_storage,
+        comment="Отличная прогулка",
     )
 
     saved = storage.read_json(default=[])
@@ -43,6 +46,7 @@ def test_finish_walk_persists_entry(sample_user_params, sample_quests, tmp_path)
     assert len(saved) == 1
     assert saved[0]["score"] == 50
     assert saved[0]["tasks"][0]["completed"] is True
+    assert saved[0]["comment"] == "Отличная прогулка"
 
 
 def test_show_history_reads_entries(sample_history, tmp_path):
