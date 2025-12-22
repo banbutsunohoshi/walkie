@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+from typing import Callable
+
 from domain.models import UserParams
 from cli.views import display_message
 
@@ -9,58 +12,81 @@ WALK_TYPES = {
 }
 
 
+@dataclass
+class WalkPrompter:
+    input_func: Callable[[str], str] = input
+    display_func: Callable[[str], None] = display_message
+
+    def prompt_walk_type(self) -> str:
+        self.display_func("Выберите тип прогулки:")
+        self.display_func("1 — Прогулка в одиночку")
+        self.display_func("2 — Прогулка для пары")
+        self.display_func("3 — Прогулка с друзьями")
+        self.display_func("4 — Прогулка с собакой")
+        while True:
+            choice = self.input_func("Введите номер: ").strip()
+            if choice in WALK_TYPES:
+                return WALK_TYPES[choice]
+            self.display_func("Некорректный выбор. Попробуйте снова.")
+
+    def prompt_text(self, prompt: str) -> str:
+        while True:
+            value = self.input_func(prompt).strip()
+            if value:
+                return value
+            self.display_func("Введите непустое значение.")
+
+    def prompt_time(self) -> int:
+        while True:
+            value = self.input_func("Сколько минут вы готовы гулять? ").strip()
+            if value.isdigit() and int(value) > 0:
+                return int(value)
+            self.display_func("Введите положительное число минут.")
+
+    def collect_walk_params(self) -> UserParams:
+        walk_type = self.prompt_walk_type()
+        mood = self.prompt_text("Ваше настроение (например, спокойное/игривое/романтичное): ")
+        goal = self.prompt_text(
+            "Цель прогулки (например, расслабиться/повеселиться/исследовать город): "
+        )
+        time_limit = self.prompt_time()
+        return UserParams(
+            walk_type=walk_type,
+            mood=mood,
+            goal=goal,
+            time_limit=time_limit,
+        )
+
+    def confirm_walk_params(self, params: UserParams) -> str:
+        self.display_func("\nПроверьте выбранные параметры:")
+        self.display_func(
+            f"Тип прогулки: {params.walk_type}, настроение: {params.mood}, цель: {params.goal}, "
+            f"время: {params.time_limit} мин"
+        )
+        self.display_func("1 — Подтвердить и сгенерировать прогулку")
+        self.display_func("2 — Изменить настройки")
+        while True:
+            choice = self.input_func("Выберите пункт: ").strip()
+            if choice in {"1", "2"}:
+                return choice
+            self.display_func("Некорректный выбор. Попробуйте снова.")
+
+
 def _prompt_walk_type() -> str:
-    display_message("Выберите тип прогулки:")
-    display_message("1 — Прогулка в одиночку")
-    display_message("2 — Прогулка для пары")
-    display_message("3 — Прогулка с друзьями")
-    display_message("4 — Прогулка с собакой")
-    while True:
-        choice = input("Введите номер: ").strip()
-        if choice in WALK_TYPES:
-            return WALK_TYPES[choice]
-        display_message("Некорректный выбор. Попробуйте снова.")
+    return WalkPrompter().prompt_walk_type()
 
 
 def _prompt_text(prompt: str) -> str:
-    while True:
-        value = input(prompt).strip()
-        if value:
-            return value
-        display_message("Введите непустое значение.")
+    return WalkPrompter().prompt_text(prompt)
 
 
 def _prompt_time() -> int:
-    while True:
-        value = input("Сколько минут вы готовы гулять? ").strip()
-        if value.isdigit() and int(value) > 0:
-            return int(value)
-        display_message("Введите положительное число минут.")
+    return WalkPrompter().prompt_time()
 
 
 def collect_walk_params() -> UserParams:
-    walk_type = _prompt_walk_type()
-    mood = _prompt_text("Ваше настроение (например, спокойное/игривое/романтичное): ")
-    goal = _prompt_text("Цель прогулки (например, расслабиться/повеселиться/исследовать город): ")
-    time_limit = _prompt_time()
-    return UserParams(
-        walk_type=walk_type,
-        mood=mood,
-        goal=goal,
-        time_limit=time_limit,
-    )
+    return WalkPrompter().collect_walk_params()
     
 
 def confirm_walk_params(params: UserParams) -> str:
-    display_message("\nПроверьте выбранные параметры:")
-    display_message(
-        f"Тип прогулки: {params.walk_type}, настроение: {params.mood}, цель: {params.goal}, "
-        f"время: {params.time_limit} мин"
-    )
-    display_message("1 — Подтвердить и сгенерировать прогулку")
-    display_message("2 — Изменить настройки")
-    while True:
-        choice = input("Выберите пункт: ").strip()
-        if choice in {"1", "2"}:
-            return choice
-        display_message("Некорректный выбор. Попробуйте снова.")
+    return WalkPrompter().confirm_walk_params(params)
