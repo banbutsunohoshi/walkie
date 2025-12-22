@@ -1,4 +1,4 @@
-rom pathlib import Path
+from pathlib import Path
 
 from cli.menu import MainMenu
 from cli.views import WalkView
