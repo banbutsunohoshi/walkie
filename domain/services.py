@@ -19,13 +19,17 @@ class QuestRepository:
 
     def find_matching(self, params: UserParams) -> list[Quest]:
         quests = self.load_quests()
+        mood = params.mood.strip().lower()
+        goal = params.goal.strip().lower()
         matched = []
         for quest in quests:
             if quest.walk_type != params.walk_type:
                 continue
-            if params.mood not in quest.mood:
+            quest_moods = {item.strip().lower() for item in quest.mood}
+            quest_goals = {item.strip().lower() for item in quest.goals}
+            if mood not in quest_moods:
                 continue
-            if params.goal not in quest.goals:
+            if goal not in quest_goals:
                 continue
             matched.append(quest)
         return matched
