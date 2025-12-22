@@ -32,23 +32,4 @@ class FinishWalkUseCase:
         self.walk_storage.add_entry(entry)
         return entry
 
-
-def finish_walk(
-    params: UserParams,
-    tasks: list[WalkTask],
-    scoring_service: ScoringService,
-    walk_storage: WalkStorage,
-    entry_id: int | None = None,
-    status: str = "finished",
-    comment: str | None = None,
-) -> HistoryEntry:
-    return FinishWalkUseCase(
-        scoring_service=scoring_service,
-        walk_storage=walk_storage,
-    ).execute(
-        params=params,
-        tasks=tasks,
-        entry_id=entry_id,
-        status=status,
-        comment=comment,
-    )
+__all__ = ["FinishWalkUseCase"]
