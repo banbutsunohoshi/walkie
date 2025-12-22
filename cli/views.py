@@ -109,25 +109,4 @@ class WalkView:
             self.display_func(f"Комментарий: {entry.comment}")
 
 
-def display_walk(walk: Walk) -> None:
-    WalkView().display_walk(walk)
-
-
-def display_walk_completion(
-    walk: Walk,
-    entry_id: int,
-    local_storage: PhotoStorage,
-) -> list[WalkTask]:
-    return WalkView().display_walk_completion(
-        walk=walk,
-        entry_id=entry_id,
-        local_storage=local_storage,
-    )
-
-
-def display_history_list(history: Iterable[HistoryEntry]) -> None:
-    WalkView().display_history_list(history)
-
-
-def display_history_entry(entry: HistoryEntry) -> None:
-    WalkView().display_history_entry(entry)
+__all__ = ["WalkView", "display_message"]
