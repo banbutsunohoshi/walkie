@@ -10,6 +10,7 @@ from cli.views import (
     display_walk,
     display_walk_completion,
 )
+from domain.models import UserParams
 from domain.services import (
     QuestRepository,
     RecommendationService,
