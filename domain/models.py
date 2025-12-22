@@ -110,6 +110,7 @@ class HistoryEntry:
     tasks: list[WalkTask]
     score: int
     status: str
+    comment: str | None = None
 
     @classmethod
     def create(
@@ -119,6 +120,7 @@ class HistoryEntry:
         tasks: list[WalkTask],
         score: int,
         status: str,
+        comment: str | None,
         entry_id: int,
     ) -> "HistoryEntry":
         return cls(
@@ -129,6 +131,7 @@ class HistoryEntry:
             tasks=tasks,
             score=score,
             status=status,
+            comment=comment,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -140,6 +143,7 @@ class HistoryEntry:
             "tasks": [task.to_dict() for task in self.tasks],
             "score": self.score,
             "status": self.status,
+            "comment": self.comment,
         }
 
     @classmethod
@@ -152,4 +156,5 @@ class HistoryEntry:
             tasks=[WalkTask.from_dict(task) for task in data.get("tasks", [])],
             score=int(data.get("score", 0)),
             status=data.get("status", "unknown"),
+            comment=data.get("comment"),
         )
