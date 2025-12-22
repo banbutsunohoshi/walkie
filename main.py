@@ -18,6 +18,7 @@ from domain.services import (
     WalkStorage,
 )
 from infrastructure.json_storage import JsonStorage
+from infrastructure.photo_storage import LocalPhotoStorage
 from use_cases.finish_walk import finish_walk
 from use_cases.generate_walk import generate_walk
 from use_cases.show_history import get_history_entry, list_history
@@ -33,6 +34,7 @@ def _run_new_walk(
     recommendation_service: RecommendationService,
     scoring_service: ScoringService,
     walk_storage: WalkStorage,
+    local_photo_storage: LocalPhotoStorage,
     params: UserParams | None = None,
 ) -> None:
     while params is None:
@@ -44,7 +46,12 @@ def _run_new_walk(
         display_message("Не удалось подобрать задания под ваши параметры.")
         return
     display_walk(walk)
-    tasks = display_walk_completion(walk)
+    entry_id = walk_storage.next_id()
+    tasks = display_walk_completion(
+        walk=walk,
+        entry_id=entry_id,
+        local_storage=local_photo_storage,
+    )
     display_message("\nЗавершить прогулку?")
     display_message("1 — Завершить прогулку")
     display_message("2 — Прервать прогулку")
@@ -65,6 +72,7 @@ def _run_new_walk(
         tasks=tasks,
         scoring_service=scoring_service,
         walk_storage=walk_storage,
+        entry_id=entry_id,
         status=status,
         comment=comment or None,
     )
@@ -84,6 +92,7 @@ def _run_history(
     recommendation_service: RecommendationService,
     scoring_service: ScoringService,
     walk_storage: WalkStorage,
+    local_photo_storage: LocalPhotoStorage,
 ) -> None:
     history = list_history(walk_storage)
     if not history:
@@ -108,6 +117,7 @@ def _run_history(
             recommendation_service=recommendation_service,
             scoring_service=scoring_service,
             walk_storage=walk_storage,
+            local_photo_storage=local_photo_storage,
             params=entry.params,
         )
 
@@ -123,6 +133,7 @@ def main() -> None:
     walk_storage = WalkStorage(storage=history_storage)
     recommendation_service = RecommendationService()
     scoring_service = ScoringService()
+    local_photo_storage = LocalPhotoStorage(data_dir)
 
     while True:
         choice = show_main_menu()
@@ -132,6 +143,7 @@ def main() -> None:
                 recommendation_service,
                 scoring_service,
                 walk_storage,
+                local_photo_storage,
             )
         elif choice == "2":
             _run_history(
@@ -139,6 +151,7 @@ def main() -> None:
                 recommendation_service,
                 scoring_service,
                 walk_storage,
+                local_photo_storage,
             )
         elif choice == "3":
             display_message("До встречи в Walkie!")
