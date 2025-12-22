@@ -9,7 +9,13 @@ def generate_walk(
     recommendation_service: MLRecommendationService,
     walk_storage: WalkStorage,
 ) -> Walk:
-    quests = quest_repo.load_quests()
+    quests = quest_repo.find_matching(params)
+    if not quests:
+        quests = [
+            quest
+            for quest in quest_repo.load_quests()
+            if quest.walk_type == params.walk_type
+        ]
     history = walk_storage.load_history()
     recommended = recommendation_service.rank(quests, history, params)
     tasks = []
