@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Сделайте фото у любимого места",
+    "type": "solo",
+    "mood": ["calm", "reflective"],
+    "goals": ["relax", "reflect"],
+    "duration": 10,
+    "location_type": "neighborhood"
+  },
+  {
+    "id": 2,
+    "title": "Найдите необычную вывеску и сфотографируйте её",
+    "type": "friends",
+    "mood": ["active", "fun"],
+    "goals": ["have_fun", "explore_city"],
+    "duration": 15,
+    "location_type": "city_centre"
+  },
+  {
+    "id": 3,
+    "title": "Пройдитесь до ближайшего парка и сделайте фото природы",
+    "type": "pair",
+    "mood": ["romantic", "calm"],
+    "goals": ["relax", "bond"],
+    "duration": 20,
+    "location_type": "park"
+  },
+  {
+    "id": 4,
+    "title": "Поиграйте с собакой и запечатлейте момент",
+    "type": "dog",
+    "mood": ["active", "fun"],
+    "goals": ["have_fun", "exercise"],
+    "duration": 10,
+    "location_type": "park"
+  },
+  {
+    "id": 5,
+    "title": "Отыщите уличное искусство и сделайте фото",
+    "type": "friends",
+    "mood": ["active", "curious"],
+    "goals": ["explore_city", "have_fun"],
+    "duration": 15,
+    "location_type": "city_centre"
+  }
+]
