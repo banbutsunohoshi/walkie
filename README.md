@@ -16,7 +16,7 @@
 **Участники проекта**
 
 [@banbutsuno_hoshi](https://t.me/banbutsuno_hoshi) — TeamLead\
-[@Eva_monsher](https://t.me/Eva_monsher) — Dev1
+[@Eva_monsher](https://t.me/Eva_monsher) — Dev2
 
 ## Docker
 
