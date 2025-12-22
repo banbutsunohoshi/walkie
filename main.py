@@ -29,6 +29,17 @@ def _build_storage(data_dir: str, filename: str) -> JsonStorage:
     return JsonStorage(str(path))
 
 
+def _seed_data_file(data_dir: str, filename: str, fallback_dir: Path) -> None:
+    target_path = Path(data_dir) / filename
+    if target_path.exists():
+        return
+    fallback_path = fallback_dir / filename
+    if not fallback_path.exists():
+        return
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    target_path.write_text(fallback_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+
 def _run_new_walk(
     quest_repo: QuestRepository,
     recommendation_service: MLRecommendationService,
@@ -127,6 +138,10 @@ def main() -> None:
     display_message(greeting)
     display_message(f"Data directory: {data_dir}")
 
+    fallback_dir = Path(__file__).resolve().parent / "data"
+    _seed_data_file(data_dir, "quests.json", fallback_dir)
+    _seed_data_file(data_dir, "history.json", fallback_dir)
+    
     quest_storage = _build_storage(data_dir, "quests.json")
     history_storage = _build_storage(data_dir, "history.json")
     quest_repo = QuestRepository(storage=quest_storage)
