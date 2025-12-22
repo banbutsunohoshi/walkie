@@ -18,4 +18,4 @@ class MainMenu:
 
 
 def show_main_menu() -> str:
-    dreturn MainMenu().show()
+    return MainMenu().show()
