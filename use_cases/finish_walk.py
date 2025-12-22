@@ -7,11 +7,13 @@ def finish_walk(
     tasks: list[WalkTask],
     scoring_service: ScoringService,
     walk_storage: WalkStorage,
+    entry_id: int | None = None,
     status: str = "finished",
     comment: str | None = None,
 ) -> HistoryEntry:
     score = scoring_service.calculate_score(tasks)
-    entry_id = walk_storage.next_id()
+    if entry_id is None:
+        entry_id = walk_storage.next_id()
     entry = HistoryEntry.create(
         walk_type=params.walk_type,
         params=params,
