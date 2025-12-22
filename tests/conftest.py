@@ -9,13 +9,27 @@ if str(PROJECT_ROOT) not in sys.path:
 
 
 def pytest_addoption(parser):
-    parser.addoption("--cov", action="append", default=[], help="(noop) coverage target")
-    parser.addoption(
-        "--cov-report",
-        action="append",
-        default=[],
-        help="(noop) coverage report",
-    )
+    try:
+        import pytest_cov  # noqa: F401
+    except Exception:
+        parser.addoption(
+            "--cov",
+            action="append",
+            default=[],
+            help="(noop) coverage target",
+        )
+        parser.addoption(
+            "--cov-report",
+            action="append",
+            default=[],
+            help="(noop) coverage report",
+        )
+        parser.addoption(
+            "--cov-fail-under",
+            action="store",
+            default=None,
+            help="(noop) coverage threshold",
+        )
 
 from domain.models import HistoryEntry, Quest, UserParams, WalkTask
 
