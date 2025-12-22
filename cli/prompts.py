@@ -72,21 +72,4 @@ class WalkPrompter:
             self.display_func("Некорректный выбор. Попробуйте снова.")
 
 
-def _prompt_walk_type() -> str:
-    return WalkPrompter().prompt_walk_type()
-
-
-def _prompt_text(prompt: str) -> str:
-    return WalkPrompter().prompt_text(prompt)
-
-
-def _prompt_time() -> int:
-    return WalkPrompter().prompt_time()
-
-
-def collect_walk_params() -> UserParams:
-    return WalkPrompter().collect_walk_params()
-    
-
-def confirm_walk_params(params: UserParams) -> str:
-    return WalkPrompter().confirm_walk_params(params)
+__all__ = ["WalkPrompter", "WALK_TYPES"]
