@@ -12,8 +12,8 @@ from cli.views import (
 )
 from domain.models import UserParams
 from domain.services import (
+    MLRecommendationService,
     QuestRepository,
-    RecommendationService,
     ScoringService,
     WalkStorage,
 )
@@ -31,7 +31,7 @@ def _build_storage(data_dir: str, filename: str) -> JsonStorage:
 
 def _run_new_walk(
     quest_repo: QuestRepository,
-    recommendation_service: RecommendationService,
+    recommendation_service: MLRecommendationService,
     scoring_service: ScoringService,
     walk_storage: WalkStorage,
     local_photo_storage: LocalPhotoStorage,
@@ -89,7 +89,7 @@ def _run_new_walk(
 
 def _run_history(
     quest_repo: QuestRepository,
-    recommendation_service: RecommendationService,
+    recommendation_service: MLRecommendationService,
     scoring_service: ScoringService,
     walk_storage: WalkStorage,
     local_photo_storage: LocalPhotoStorage,
@@ -131,7 +131,7 @@ def main() -> None:
     history_storage = _build_storage(data_dir, "history.json")
     quest_repo = QuestRepository(storage=quest_storage)
     walk_storage = WalkStorage(storage=history_storage)
-    recommendation_service = RecommendationService()
+    ml_recommendation_service = MLRecommendationService()
     scoring_service = ScoringService()
     local_photo_storage = LocalPhotoStorage(data_dir)
 
@@ -140,7 +140,7 @@ def main() -> None:
         if choice == "1":
             _run_new_walk(
                 quest_repo,
-                recommendation_service,
+                ml_recommendation_service,
                 scoring_service,
                 walk_storage,
                 local_photo_storage,
@@ -148,7 +148,7 @@ def main() -> None:
         elif choice == "2":
             _run_history(
                 quest_repo,
-                recommendation_service,
+                ml_recommendation_service,
                 scoring_service,
                 walk_storage,
                 local_photo_storage,
