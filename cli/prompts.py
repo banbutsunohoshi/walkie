@@ -49,3 +49,18 @@ def collect_walk_params() -> UserParams:
         goal=goal,
         time_limit=time_limit,
     )
+    
+
+def confirm_walk_params(params: UserParams) -> str:
+    display_message("\nПроверьте выбранные параметры:")
+    display_message(
+        f"Тип прогулки: {params.walk_type}, настроение: {params.mood}, цель: {params.goal}, "
+        f"время: {params.time_limit} мин"
+    )
+    display_message("1 — Подтвердить и сгенерировать прогулку")
+    display_message("2 — Изменить настройки")
+    while True:
+        choice = input("Выберите пункт: ").strip()
+        if choice in {"1", "2"}:
+            return choice
+        display_message("Некорректный выбор. Попробуйте снова.")
