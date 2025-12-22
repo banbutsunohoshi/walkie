@@ -11,6 +11,7 @@ def finish_walk(
     comment: str | None = None,
 ) -> HistoryEntry:
     score = scoring_service.calculate_score(tasks)
+    entry_id = walk_storage.next_id()
     entry = HistoryEntry.create(
         walk_type=params.walk_type,
         params=params,
@@ -18,6 +19,7 @@ def finish_walk(
         score=score,
         status=status,
         comment=comment,
+        entry_id=entry_id,
     )
     walk_storage.add_entry(entry)
     return entry
