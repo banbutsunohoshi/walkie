@@ -1,5 +1,5 @@
 from domain.models import WalkTask
-from domain.services import QuestRepository, RecommendationService, ScoringService, WalkStorage
+from domain.services import MLRecommendationService, QuestRepository, ScoringService, WalkStorage
 from infrastructure.json_storage import JsonStorage
 from use_cases.finish_walk import finish_walk
 from use_cases.generate_walk import generate_walk
@@ -17,7 +17,7 @@ def test_generate_walk_uses_recommendations_and_time_limit(
     walk = generate_walk(
         params=sample_user_params,
         quest_repo=QuestRepository(storage=quests_storage),
-        recommendation_service=RecommendationService(),
+        recommendation_service=MLRecommendationService(),
         walk_storage=WalkStorage(storage=history_storage),
     )
 
