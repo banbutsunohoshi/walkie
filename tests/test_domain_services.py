@@ -1,5 +1,5 @@
 from domain.models import WalkTask
-from domain.services import QuestRepository, RecommendationService, ScoringService
+from domain.services import MLRecommendationService, QuestRepository, RecommendationService, ScoringService
 from infrastructure.json_storage import JsonStorage
 
 
@@ -19,6 +19,16 @@ def test_recommendation_prioritizes_unseen(sample_history, sample_quests):
     recommended = service.recommend(sample_quests[:2], sample_history)
 
     assert [quest.id for quest in recommended] == [1, 2]
+
+
+def test_ml_recommendation_uses_history_and_params(
+    sample_history, sample_quests, sample_user_params
+):
+    service = MLRecommendationService()
+
+    ranked = service.rank(sample_quests, sample_history, sample_user_params)
+
+    assert [quest.id for quest in ranked] == [1, 2]
 
 
 def test_scoring_accounts_for_completion_and_photos(sample_quests):
