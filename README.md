@@ -29,7 +29,12 @@ docker build -t walkie .
 ### Запуск контейнера
 
 ```bash
-docker run --rm -e WALKIE_GREETING="Привет из Walkie!" -e WALKIE_DATA_DIR=/data walkie
+mkdir -p ~/walkie/data
+docker run --rm -it \
+  -e WALKIE_DATA_DIR=/data \
+  -v "$HOME/walkie/data:/data" \
+  -v "$HOME/walkie/images:/photos" \
+  walkie:check
 ```
 
 ### Переменные окружения
@@ -38,9 +43,6 @@ docker run --rm -e WALKIE_GREETING="Привет из Walkie!" -e WALKIE_DATA_DI
 
 - `WALKIE_GREETING` — приветственное сообщение (по умолчанию: `Добро пожаловать в Walkie!`)
 - `WALKIE_DATA_DIR` — путь к данным приложения (по умолчанию: `/data`)
-
-### Публикация в DockerHub
-## в процессе :)
 
 ## Тестирование
 
