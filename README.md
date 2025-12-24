@@ -20,6 +20,15 @@
 
 ## Docker
 
+### Клонирование репозитория
+
+```bash
+cd ~
+git clone https://github.com/banbutsunohoshi/walkie.git
+cd walkie
+docker build -t walkie:check .
+```
+
 ### Сборка образа
 
 ```bash
